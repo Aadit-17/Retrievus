@@ -4,12 +4,12 @@ services:
     env: python
     region: oregon
     plan: starter
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install --upgrade pip setuptools wheel
+      pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
       - key: PINECONE_API_KEY
         sync: false
       - key: PINECONE_INDEX_NAME
@@ -25,7 +25,5 @@ services:
       - key: GEMINI_MODEL
         value: gemini-2.5-flash-lite
     autoDeploy: true
-    disk:
-      name: retrievus-backend-disk
-      mountPath: /opt/render/project
-      sizeGB: 1
+    runtime:
+      pythonVersion: 3.11.0
