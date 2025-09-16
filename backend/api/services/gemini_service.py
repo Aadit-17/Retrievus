@@ -1,6 +1,13 @@
 import google.generativeai as genai
+import google.generativeai as genai
 from typing import List, Dict, Any
-from ..config import Config
+import sys
+import os
+
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from config import Config
 
 class GeminiService:
     def __init__(self):

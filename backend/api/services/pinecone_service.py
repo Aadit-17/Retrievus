@@ -1,9 +1,16 @@
 from pinecone import Pinecone
+from pinecone import Pinecone
 from typing import List, Dict, Any
-from ..config import Config
+import sys
+import os
 import re
 from collections import Counter
 import math
+
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from config import Config
 
 class PineconeService:
     def __init__(self):

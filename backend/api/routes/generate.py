@@ -2,8 +2,14 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from enum import Enum
 from typing import List
-from ..services.pinecone_service import PineconeService
-from ..services.gemini_service import GeminiService
+import sys
+import os
+
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from services.pinecone_service import PineconeService
+from services.gemini_service import GeminiService
 
 router = APIRouter(tags=["generate"])
 pinecone_service = PineconeService()

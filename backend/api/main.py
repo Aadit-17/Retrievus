@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
+import sys
+import os
 
-from .config import Config
-from .routes import generate
+# Add the current directory to Python path for imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from config import Config
+from routes.generate import router as generate_router
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -15,14 +20,18 @@ app = FastAPI(
 # Add CORS middleware for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[Config.FRONTEND_ORIGIN],
+    allow_origins=[
+        "https://retrievus-frontend.vercel.app",  # Your Vercel frontend URL
+        "http://localhost:3000",  # Local development
+        "http://localhost:5173",  # Vite dev server
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
 # Include routers
-app.include_router(generate.router)
+app.include_router(generate_router)
 
 @app.get("/")
 async def root():
