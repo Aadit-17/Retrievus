@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: retrievus-backend
+    env: python
+    region: oregon
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_INDEX_NAME
+        value: retrievus
+      - key: PINECONE_NAMESPACE
+        value: roles
+      - key: EMBEDDING_MODEL
+        value: llama-text-embed-v2
+      - key: RERANK_MODEL
+        value: bge-reranker-v2-m3
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash-lite
+    autoDeploy: true
+    disk:
+      name: retrievus-backend-disk
+      mountPath: /opt/render/project
+      sizeGB: 1
