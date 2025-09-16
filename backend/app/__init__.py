@@ -1,1 +1,0 @@
-# Retrievus Backend Application

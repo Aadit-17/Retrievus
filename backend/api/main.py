@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from mangum import Mangum
+
 from .config import Config
 from .routes import generate
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Retrievus API",
+    title="Retrievus API", 
     description="A scalable RAG system backend using Pinecone and Google Gemini",
     version="1.0.0"
 )
@@ -27,7 +29,7 @@ async def root():
     """Root endpoint"""
     return {
         "message": "Welcome to Retrievus API",
-        "version": "1.0.0",
+        "version": "1.0.0", 
         "docs": "/docs",
         "endpoint": "/generate"
     }
@@ -40,6 +42,4 @@ async def health_check():
         "message": "Retrievus API is running"
     }
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+handler = Mangum(app)
