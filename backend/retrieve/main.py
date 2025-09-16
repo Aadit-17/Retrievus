@@ -1,18 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from mangum import Mangum
-import sys
-import os
-
-# Add the current directory to Python path for imports
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 from config import Config
-from routes.generate import router as generate_router
+from routes import generate
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Retrievus API", 
+    title="Retrievus API",
     description="A scalable RAG system backend using Pinecone and Google Gemini",
     version="1.0.0"
 )
@@ -20,25 +13,21 @@ app = FastAPI(
 # Add CORS middleware for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://retrievus-frontend.vercel.app",  # Your Vercel frontend URL
-        "http://localhost:3000",  # Local development
-        "http://localhost:5173",  # Vite dev server
-    ],
+    allow_origins=[Config.FRONTEND_ORIGIN],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
 # Include routers
-app.include_router(generate_router)
+app.include_router(generate.router)
 
 @app.get("/")
 async def root():
     """Root endpoint"""
     return {
         "message": "Welcome to Retrievus API",
-        "version": "1.0.0", 
+        "version": "1.0.0",
         "docs": "/docs",
         "endpoint": "/generate"
     }
@@ -51,4 +40,6 @@ async def health_check():
         "message": "Retrievus API is running"
     }
 
-handler = Mangum(app)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
